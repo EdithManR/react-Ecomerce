@@ -1,0 +1,11 @@
+
+.options{
+  min-width:100%;
+}
+.form-select{
+  max-width:400px;
+}
+.card-img-top{
+  max-width:400px;
+  max-height: 400px;
+}
