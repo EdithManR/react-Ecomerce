@@ -5,7 +5,11 @@
 .form-select{
   max-width:400px;
 }
-.card-img-top{
+.card-img-top img{
+ object-fit: contain;
   max-width:400px;
   max-height: 400px;
+}
+.card-img-top img:hover{
+  zoom:103%;
 }

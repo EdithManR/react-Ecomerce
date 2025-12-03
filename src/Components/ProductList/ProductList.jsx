@@ -4,6 +4,8 @@ import "./ProductList.css"
 const ProductList = () => {
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState(null);
+  const [orden, setOrden] = useState("Relevante");
+  
 
   useEffect(()=>{
     const fetchProductos = async ()=>{
@@ -20,6 +22,20 @@ const ProductList = () => {
     }
     fetchProductos();
   }, [])
+
+  const handleOrdenChange =(e)=>{
+    setOrden(e.target.value);
+    console.log(productosOrdenados)
+  }
+  const productosOrdenados = [...productos].sort((a,b)=>{
+    if(orden==="Precio menor a mayor"){
+      return b.price - a.price
+    }if(orden==="Precio mayor a menor"){
+      return a.price - b.price
+    }
+    return 0;
+  })
+
   return (
     <section className='d-flex gap-3 p-1  flex-row flex-wrap'>
       <aside className='Filters'>
@@ -73,11 +89,10 @@ const ProductList = () => {
           <div className="options  ">
             <label className="sort-options d-flex flex-row">
               <span className="d-inline flex-fill">Ordenar por:</span>
-            <select className="form-select d-inline" aria-label="Default select example">
-              <option selected>Relevante</option>
-              <option value="1">Precio menor a mayor</option>
-              <option value="2">Precio mayor a menor</option>
-              <option value="3">Three</option>
+            <select onChange={handleOrdenChange} value={orden} className="form-select d-inline">
+              <option >Relevante</option>
+              <option >Precio menor a mayor</option>
+              <option >Precio mayor a menor</option>
             </select>
             </label>
           </div>
@@ -86,7 +101,7 @@ const ProductList = () => {
           { error ? (
             <p className="error-mesage">{error}</p>
           ):(
-            productos.map((producto)=>{
+            productosOrdenados.map((producto)=>{
               return(
                 <>
                 
