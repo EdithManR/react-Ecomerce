@@ -1,11 +1,14 @@
+
 import {useState,  useEffect} from 'react'
 import "./ProductList.css"
+import { useNavigate } from 'react-router-dom';
 
 const ProductList = () => {
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState(null);
   const [orden, setOrden] = useState("Relevante");
-  const [filtros, setFiltros] = useState({categorias:[]})
+  const [filtros, setFiltros] = useState({categorias:[]});
+  const navigate = useNavigate();
   
 
   useEffect(()=>{
@@ -53,11 +56,13 @@ const ProductList = () => {
     }))
   }
 
-  
+  const handleImageClick =(id)=>{
+    navigate(`/productos/${id}`);
+  }
 
   return (
     <section className='d-flex gap-3 p-1  flex-row flex-wrap'>
-      <aside className='Filters'>
+      <aside className='Filters w-40'>
         <h2 className="mb-2">Filtros</h2>
         <div className=" p-3 border border-1 mb-3 d-flex flex-column">
           <h3 className="mb-3">Filtrar por categoría</h3>
@@ -88,7 +93,7 @@ const ProductList = () => {
         </div>
 
       </aside>
-      <main className='colection flex-fill'>
+      <main className='colection w-50 flex-fill'>
         <div className="options">
           <h2>TODAS LAS COLECCIONES</h2>
           <div className="options  ">
@@ -113,7 +118,11 @@ const ProductList = () => {
                 
 
                <div className="card mt-3 gap-3 " style={{maxWidth:"18rem"}} key={producto.id}>
-                  <img src={producto.image} className="card-img-top" alt={producto.image}/>
+                  <img src={producto.image} 
+                    className="card-img-top" 
+                    alt={producto.image}
+                    onClick = {()=> handleImageClick(producto.id)}
+                  />
                   <div className="card-body">
                     <h5 className="card-title fs-4 text fw-bold">{producto.title}</h5>
                     <p className="card-text"> {producto.price}</p>
