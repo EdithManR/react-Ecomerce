@@ -1,0 +1,13 @@
+.logo{
+  font-size:24px;
+  font-weight: bold;
+  color:#9893fb;
+  cursor:pointer;
+}
+.nav-link{
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 5px 15px;
+  padding: 0%;
+}
