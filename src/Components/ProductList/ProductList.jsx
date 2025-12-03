@@ -5,6 +5,7 @@ const ProductList = () => {
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState(null);
   const [orden, setOrden] = useState("Relevante");
+  const [filtros, setFiltros] = useState({categorias:[]})
   
 
   useEffect(()=>{
@@ -25,9 +26,16 @@ const ProductList = () => {
 
   const handleOrdenChange =(e)=>{
     setOrden(e.target.value);
-    console.log(productosOrdenados)
   }
-  const productosOrdenados = [...productos].sort((a,b)=>{
+
+  const productosFiltrados =productos.filter((producto)=>{
+      const matchCategoria = 
+      filtros.categorias.length === 0 || 
+      filtros .categorias.includes(producto.category)
+    return matchCategoria
+  })
+
+  const productosOrdenados = [...productosFiltrados].sort((a,b)=>{
     if(orden==="Precio menor a mayor"){
       return b.price - a.price
     }if(orden==="Precio mayor a menor"){
@@ -36,6 +44,17 @@ const ProductList = () => {
     return 0;
   })
 
+    const toggleFiltros = (tipoFiltro, valor)=>{
+    setFiltros((prev)=>({
+      ...prev,
+      [tipoFiltro]:prev[tipoFiltro].includes(valor)
+      ? prev[tipoFiltro].filter((item)=>item !==valor)
+      : [...prev[tipoFiltro], valor],
+    }))
+  }
+
+  
+
   return (
     <section className='d-flex gap-3 p-1  flex-row flex-wrap'>
       <aside className='Filters'>
@@ -43,45 +62,31 @@ const ProductList = () => {
         <div className=" p-3 border border-1 mb-3 d-flex flex-column">
           <h3 className="mb-3">Filtrar por categoría</h3>
           <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="checkDisabled" />
+            <input className="form-check-input" type="checkbox" value="" id="checkDisabled" 
+              onChange={()=>toggleFiltros("categorias", "men's clothing")}
+            />
             <label className="form-check-label" htmlFor="checkDisabled">
               Hombres
             </label>
           </div>
           <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="mujeres" />
+            <input className="form-check-input" type="checkbox" value="" id="mujeres"
+            onChange={()=>toggleFiltros("categorias", "women's clothing")}
+            />
             <label className="form-check-label" htmlFor="mujeres">
               Mujeres
             </label>
           </div>
           <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="ninos" />
-            <label className="form-check-label" htmlFor="ninos">
-              Niños
+            <input className="form-check-input" type="checkbox" value="" id="jewelery" 
+            onChange={()=>toggleFiltros("categorias", "jewelery")}
+            />
+            <label className="form-check-label" htmlFor="jewelery">
+              Joyería
             </label>
           </div>
         </div>
-        <div className="p-3 border border-1 mb-3 d-flex flex-column">
-          <h3 className="mb-2">Filtrar por tipo</h3>
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="tipo1" />
-            <label className="form-check-label" htmlFor="tipo1">
-             Tipo1
-            </label>
-          </div>
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="tipo2" />
-            <label className="form-check-label" htmlFor="tipo2">
-              Tipo2
-            </label>
-          </div>
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="tipo3" />
-            <label className="form-check-label" htmlFor="tipo3">
-              Tipo 3
-            </label>
-          </div>
-        </div>
+
       </aside>
       <main className='colection flex-fill'>
         <div className="options">
@@ -97,10 +102,11 @@ const ProductList = () => {
             </label>
           </div>
         </div>
-        <div className="products d-flex flex-row flex-wrap gap-3 " style={{maxWidth:'80%'}}>
+        <div className="products d-flex flex-row flex-wrap gap-3 " 
+        style={{maxWidth:'80%'}}>
           { error ? (
             <p className="error-mesage">{error}</p>
-          ):(
+          ): productosFiltrados.length > 0 ? (
             productosOrdenados.map((producto)=>{
               return(
                 <>
@@ -120,7 +126,11 @@ const ProductList = () => {
             
               
             })
-          )}
+          ):
+          (
+            <p>No hay productos que coincidadn con los filtros seleccionados</p>
+          )
+          }
         </div>
       </main>
     </section>
